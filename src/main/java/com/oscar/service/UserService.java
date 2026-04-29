@@ -1,5 +1,6 @@
 package com.oscar.service;
 
+import com.oscar.exception.DuplicateEmailException;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
 import com.oscar.entity.User;
@@ -17,7 +18,7 @@ public class UserService {
 
     public UserResponse createUser(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new DuplicateEmailException(request.getEmail());
         }
 
         User user = new User(
