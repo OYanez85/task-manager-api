@@ -1,5 +1,6 @@
 package com.oscar.controller;
 
+import jakarta.validation.Valid;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
 import com.oscar.service.UserService;
@@ -18,7 +19,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse createUser(@RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 }
