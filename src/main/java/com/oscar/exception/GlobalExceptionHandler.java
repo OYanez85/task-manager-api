@@ -33,7 +33,16 @@ public class GlobalExceptionHandler {
                 "message", exception.getMessage()
         );
     }
-
+    @ExceptionHandler(ProjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, Object> handleProjectNotFound(ProjectNotFoundException exception) {
+        return Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", 404,
+                "error", "Not Found",
+                "message", exception.getMessage()
+        );
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleValidationErrors(MethodArgumentNotValidException exception) {
@@ -45,7 +54,6 @@ public class GlobalExceptionHandler {
                         FieldError::getDefaultMessage,
                         (existing, replacement) -> existing
                 ));
-
         return Map.of(
                 "timestamp", LocalDateTime.now(),
                 "status", 400,
