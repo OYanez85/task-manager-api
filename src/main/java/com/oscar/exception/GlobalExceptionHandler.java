@@ -53,6 +53,16 @@ public class GlobalExceptionHandler {
                 "message", exception.getMessage()
         );
     }
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, Object> handleInvalidCredentials(InvalidCredentialsException exception) {
+        return Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", 401,
+                "error", "Unauthorized",
+                "message", exception.getMessage()
+        );
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleValidationErrors(MethodArgumentNotValidException exception) {
