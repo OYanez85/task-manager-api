@@ -1,11 +1,13 @@
 package com.oscar.service;
 
-import com.oscar.exception.DuplicateEmailException;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
 import com.oscar.entity.User;
+import com.oscar.exception.DuplicateEmailException;
 import com.oscar.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -30,12 +32,23 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
+        return mapToUserResponse(savedUser);
+    }
+
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToUserResponse)
+                .toList();
+    }
+
+    private UserResponse mapToUserResponse(User user) {
         return new UserResponse(
-                savedUser.getId(),
-                savedUser.getFullName(),
-                savedUser.getEmail(),
-                savedUser.getRole(),
-                savedUser.getCreatedAt()
+                user.getId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getCreatedAt()
         );
     }
 }

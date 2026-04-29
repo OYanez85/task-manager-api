@@ -1,11 +1,13 @@
 package com.oscar.controller;
 
-import jakarta.validation.Valid;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
 import com.oscar.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,5 +23,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
+    }
+
+    @GetMapping
+    public List<UserResponse> getAllUsers() {
+        return userService.getAllUsers();
     }
 }
