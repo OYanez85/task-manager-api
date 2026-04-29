@@ -1,5 +1,6 @@
 package com.oscar.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.oscar.dto.UpdateUserRequest;
 import com.oscar.exception.UserNotFoundException;
 import com.oscar.dto.CreateUserRequest;
@@ -16,8 +17,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse createUser(CreateUserRequest request) {
@@ -28,7 +30,7 @@ public class UserService {
         User user = new User(
                 request.getFullName(),
                 request.getEmail(),
-                request.getPassword(),
+                passwordEncoder.encode(request.getPassword()),
                 request.getRole()
         );
 
@@ -86,4 +88,5 @@ public class UserService {
                 user.getCreatedAt()
         );
     }
+    private final PasswordEncoder passwordEncoder;
 }
