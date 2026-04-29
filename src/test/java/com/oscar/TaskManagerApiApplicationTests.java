@@ -1,4 +1,4 @@
-package com.oscar.task_manager_api;
+package com.oscar;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
