@@ -1,5 +1,6 @@
 package com.oscar.service;
 
+import com.oscar.entity.TaskStatus;
 import com.oscar.dto.UpdateTaskStatusRequest;
 import com.oscar.dto.CreateTaskRequest;
 import com.oscar.dto.TaskResponse;
@@ -50,9 +51,20 @@ public class TaskService {
         return mapToTaskResponse(savedTask);
     }
 
-    public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll()
-                .stream()
+    public List<TaskResponse> getTasks(Long projectId, TaskStatus status) {
+        List<Task> tasks;
+
+        if (projectId != null && status != null) {
+            tasks = taskRepository.findByProjectIdAndStatus(projectId, status);
+        } else if (projectId != null) {
+            tasks = taskRepository.findByProjectId(projectId);
+        } else if (status != null) {
+            tasks = taskRepository.findByStatus(status);
+        } else {
+            tasks = taskRepository.findAll();
+        }
+
+        return tasks.stream()
                 .map(this::mapToTaskResponse)
                 .toList();
     }

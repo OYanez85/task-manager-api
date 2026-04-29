@@ -1,5 +1,6 @@
 package com.oscar.controller;
 
+import com.oscar.entity.TaskStatus;
 import com.oscar.dto.UpdateTaskStatusRequest;
 import com.oscar.dto.CreateTaskRequest;
 import com.oscar.dto.TaskResponse;
@@ -27,8 +28,11 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponse> getAllTasks() {
-        return taskService.getAllTasks();
+    public List<TaskResponse> getTasks(
+            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false) TaskStatus status
+    ) {
+        return taskService.getTasks(projectId, status);
     }
 
     @GetMapping("/{id}")
