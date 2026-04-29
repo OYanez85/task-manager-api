@@ -1,5 +1,6 @@
 package com.oscar.service;
 
+import com.oscar.exception.UserNotFoundException;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
 import com.oscar.entity.User;
@@ -40,6 +41,20 @@ public class UserService {
                 .stream()
                 .map(this::mapToUserResponse)
                 .toList();
+    }
+
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return mapToUserResponse(user);
+    }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        userRepository.delete(user);
     }
 
     private UserResponse mapToUserResponse(User user) {

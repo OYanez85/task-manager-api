@@ -25,8 +25,19 @@ public class UserController {
         return userService.createUser(request);
     }
 
+    @GetMapping("/{id}")
+    public UserResponse getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
     @GetMapping
     public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
