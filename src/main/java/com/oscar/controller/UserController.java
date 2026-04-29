@@ -1,5 +1,6 @@
 package com.oscar.controller;
 
+import com.oscar.dto.UpdateUserRequest;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
 import com.oscar.service.UserService;
@@ -40,4 +41,13 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
+
+    @PutMapping("/{id}")
+    public UserResponse updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request
+    ) {
+        return userService.updateUser(id, request);
+    }
+
 }

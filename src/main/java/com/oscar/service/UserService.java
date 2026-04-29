@@ -1,5 +1,6 @@
 package com.oscar.service;
 
+import com.oscar.dto.UpdateUserRequest;
 import com.oscar.exception.UserNotFoundException;
 import com.oscar.dto.CreateUserRequest;
 import com.oscar.dto.UserResponse;
@@ -34,6 +35,25 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return mapToUserResponse(savedUser);
+    }
+
+    public UserResponse updateUser(Long id, UpdateUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        userRepository.findByEmail(request.getEmail())
+                .filter(existingUser -> !existingUser.getId().equals(id))
+                .ifPresent(existingUser -> {
+                    throw new DuplicateEmailException(request.getEmail());
+                });
+
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setRole(request.getRole());
+
+        User updatedUser = userRepository.save(user);
+
+        return mapToUserResponse(updatedUser);
     }
 
     public List<UserResponse> getAllUsers() {
