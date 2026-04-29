@@ -1,5 +1,6 @@
 package com.oscar.service;
 
+import com.oscar.dto.UpdateTaskStatusRequest;
 import com.oscar.dto.CreateTaskRequest;
 import com.oscar.dto.TaskResponse;
 import com.oscar.entity.Project;
@@ -61,6 +62,17 @@ public class TaskService {
                 .orElseThrow(() -> new TaskNotFoundException(id));
 
         return mapToTaskResponse(task);
+    }
+
+    public TaskResponse updateTaskStatus(Long id, UpdateTaskStatusRequest request) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new TaskNotFoundException(id));
+
+        task.setStatus(request.getStatus());
+
+        Task updatedTask = taskRepository.save(task);
+
+        return mapToTaskResponse(updatedTask);
     }
 
     private TaskResponse mapToTaskResponse(Task task) {

@@ -1,5 +1,6 @@
 package com.oscar.controller;
 
+import com.oscar.dto.UpdateTaskStatusRequest;
 import com.oscar.dto.CreateTaskRequest;
 import com.oscar.dto.TaskResponse;
 import com.oscar.service.TaskService;
@@ -33,5 +34,13 @@ public class TaskController {
     @GetMapping("/{id}")
     public TaskResponse getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
+    }
+
+    @PatchMapping("/{id}/status")
+    public TaskResponse updateTaskStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateTaskStatusRequest request
+    ) {
+        return taskService.updateTaskStatus(id, request);
     }
 }
