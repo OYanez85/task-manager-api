@@ -1,11 +1,12 @@
 package com.oscar.service;
 
-import com.oscar.entity.TaskStatus;
-import com.oscar.dto.UpdateTaskStatusRequest;
 import com.oscar.dto.CreateTaskRequest;
+import com.oscar.dto.PagedResponse;
 import com.oscar.dto.TaskResponse;
+import com.oscar.dto.UpdateTaskStatusRequest;
 import com.oscar.entity.Project;
 import com.oscar.entity.Task;
+import com.oscar.entity.TaskStatus;
 import com.oscar.entity.User;
 import com.oscar.exception.ProjectNotFoundException;
 import com.oscar.exception.TaskNotFoundException;
@@ -13,9 +14,9 @@ import com.oscar.exception.UserNotFoundException;
 import com.oscar.repository.ProjectRepository;
 import com.oscar.repository.TaskRepository;
 import com.oscar.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TaskService {
@@ -51,22 +52,29 @@ public class TaskService {
         return mapToTaskResponse(savedTask);
     }
 
-    public List<TaskResponse> getTasks(Long projectId, TaskStatus status) {
-        List<Task> tasks;
+    public PagedResponse<TaskResponse> getTasks(Long projectId, TaskStatus status, Pageable pageable) {
+        Page<Task> taskPage;
 
         if (projectId != null && status != null) {
-            tasks = taskRepository.findByProjectIdAndStatus(projectId, status);
+            taskPage = taskRepository.findByProjectIdAndStatus(projectId, status, pageable);
         } else if (projectId != null) {
-            tasks = taskRepository.findByProjectId(projectId);
+            taskPage = taskRepository.findByProjectId(projectId, pageable);
         } else if (status != null) {
-            tasks = taskRepository.findByStatus(status);
+            taskPage = taskRepository.findByStatus(status, pageable);
         } else {
-            tasks = taskRepository.findAll();
+            taskPage = taskRepository.findAll(pageable);
         }
 
-        return tasks.stream()
-                .map(this::mapToTaskResponse)
-                .toList();
+        return new PagedResponse<>(
+                taskPage.getContent()
+                        .stream()
+                        .map(this::mapToTaskResponse)
+                        .toList(),
+                taskPage.getNumber(),
+                taskPage.getSize(),
+                taskPage.getTotalElements(),
+                taskPage.getTotalPages()
+        );
     }
 
     public TaskResponse getTaskById(Long id) {
